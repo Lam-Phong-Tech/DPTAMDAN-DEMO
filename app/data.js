@@ -139,15 +139,21 @@ TD.programs = {
 /* ---- Đơn hàng mẫu (cho danh sách & dashboard) ---- */
 TD.orders = [
   { ma: '05-05-2026', khach: 'ETC-NT-051', tdv: 'TDV-01', ngay: '2026-05-28', kenh: 'Nhà thuốc',
-    trangThai: 'Chờ xử lý', tong: 27680000 },
+    trangThai: 'Chờ xử lý', tong: 27680000,
+    lines: [ { maSP:'SP-001', soLuong:44, suDungGiaThung:true }, { maSP:'SP-002', soLuong:30, suDungGiaThung:true },
+             { maSP:'SP-004', soLuong:60, suDungGiaThung:true }, { maSP:'SP-005', soLuong:80, suDungGiaThung:true } ] },
   { ma: '04-05-2026', khach: 'ETC-BS-014', tdv: 'TDV-03', ngay: '2026-05-28', kenh: 'Phòng khám',
-    trangThai: 'Đã duyệt', tong: 8420000 },
+    trangThai: 'Đã duyệt', tong: 8420000, duyetBoi: 'Quản trị viên', duyetLuc: '28/05/2026 14:20',
+    lines: [ { maSP:'SP-003', soLuong:24, suDungGiaThung:true }, { maSP:'SP-006', soLuong:36, suDungGiaThung:true } ] },
   { ma: '03-05-2026', khach: 'OTC-TP-082', tdv: 'TDV-02', ngay: '2026-05-27', kenh: 'Nhà thuốc',
-    trangThai: 'Đã in', tong: 4150000 },
+    trangThai: 'Đã in', tong: 4150000, duyetBoi: 'Quản trị viên', duyetLuc: '27/05/2026 09:05',
+    lines: [ { maSP:'SP-005', soLuong:60, suDungGiaThung:true }, { maSP:'SP-009', soLuong:50, suDungGiaThung:false } ] },
   { ma: '02-05-2026', khach: 'ETC-BV-006', tdv: 'TDV-03', ngay: '2026-05-27', kenh: 'Bệnh viện',
-    trangThai: 'Đã duyệt', tong: 61500000 },
+    trangThai: 'Đã duyệt', tong: 61500000, duyetBoi: 'Quản trị viên', duyetLuc: '27/05/2026 16:40',
+    lines: [ { maSP:'SP-001', soLuong:400, suDungGiaThung:true }, { maSP:'SP-007', soLuong:200, suDungGiaThung:true } ] },
   { ma: '01-05-2026', khach: 'ETC-BS-027', tdv: 'TDV-03', ngay: '2026-05-26', kenh: 'Phòng khám',
-    trangThai: 'Đã in', tong: 12300000 },
+    trangThai: 'Đã in', tong: 12300000, duyetBoi: 'Quản trị viên', duyetLuc: '26/05/2026 11:15',
+    lines: [ { maSP:'SP-004', soLuong:96, suDungGiaThung:true }, { maSP:'SP-008', soLuong:48, suDungGiaThung:true } ] },
 ];
 
 /* ---- Helpers tra cứu ---- */

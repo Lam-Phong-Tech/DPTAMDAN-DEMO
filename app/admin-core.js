@@ -24,6 +24,8 @@ const ICON = {
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"/></svg>',
   upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7v6h6M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
 };
 
 const AV_COLORS = ['oklch(0.55 0.13 250)','oklch(0.55 0.13 160)','oklch(0.58 0.14 30)','oklch(0.52 0.13 300)','oklch(0.55 0.13 200)'];
@@ -35,6 +37,9 @@ const APP = {
   screen: 'dash',
   // đơn đang soạn — mặc định khách VIP để minh hoạ đầy đủ chương trình
   order: {
+    ma: null,            // null = đơn nháp mới
+    trangThai: 'Nháp',
+    ref: null,           // trỏ tới bản ghi trong TD.orders khi mở đơn cũ
     custMa: 'ETC-NT-051',
     tdvMa: 'TDV-01',
     lines: [
@@ -216,8 +221,27 @@ function dashAlert(level, ic, t, d) {
 
 /* ---------------- Danh sách đơn ---------------- */
 function statusBadge(s) {
-  const m = { 'Chờ xử lý':'badge-warn', 'Đã duyệt':'badge-blue', 'Đã in':'badge-green', 'Nháp':'badge-gray' };
+  const m = { 'Chờ xử lý':'badge-warn', 'Đã duyệt':'badge-blue', 'Đã in':'badge-green', 'Nháp':'badge-gray', 'Đã hủy':'badge-danger' };
   return `<span class="badge ${m[s]||'badge-gray'}">${s}</span>`;
+}
+
+/* mở đơn cũ từ danh sách — nạp đúng dữ liệu & trạng thái */
+function openOrder(ma) {
+  const o = TD.orders.find(x => x.ma === ma);
+  if (!o) return go('order');
+  o.lines = o.lines || [];
+  APP.order = { ma: o.ma, trangThai: o.trangThai, ref: o, custMa: o.khach, tdvMa: o.tdv,
+    lines: o.lines, duyetBoi: o.duyetBoi, duyetLuc: o.duyetLuc };
+  go('order');
+}
+
+/* tạo đơn nháp mới */
+function newDraft(custMa) {
+  APP.order = { ma: null, trangThai: 'Nháp', ref: null,
+    custMa: custMa || 'ETC-NT-051', tdvMa: 'TDV-01',
+    lines: [ { maSP:'SP-001', soLuong:44, suDungGiaThung:true }, { maSP:'SP-002', soLuong:30, suDungGiaThung:true },
+             { maSP:'SP-004', soLuong:60, suDungGiaThung:true }, { maSP:'SP-005', soLuong:80, suDungGiaThung:true } ] };
+  go('order');
 }
 function ordersTable(list) {
   return `<div class="tbl-wrap"><table class="tbl"><thead><tr>
@@ -232,7 +256,7 @@ function ordersTable(list) {
   }).join('')}</tbody></table></div>`;
 }
 function bindOrdersTable(c) {
-  c.querySelectorAll('[data-open-order]').forEach(tr => tr.onclick = () => go('order'));
+  c.querySelectorAll('[data-open-order]').forEach(tr => tr.onclick = () => openOrder(tr.dataset.openOrder));
 }
 
 function renderOrders(c) {
@@ -252,7 +276,7 @@ function renderOrders(c) {
     </div>
     ${list.length ? ordersTable(list) : emptyHtml('Không có đơn phù hợp bộ lọc')}
   </div>`;
-  c.querySelector('#newOrder').onclick = () => go('order');
+  c.querySelector('#newOrder').onclick = () => newDraft();
   c.querySelector('#expOrders').onclick = () => exportOrders(list);
   bindSeg(c, 'orders');
   bindOrdersTable(c);

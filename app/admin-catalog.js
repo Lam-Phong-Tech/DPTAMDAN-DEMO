@@ -84,7 +84,7 @@ function openCustDrawer(c, ma) {
   mask.classList.add('open');
   mask.querySelector('#dx').onclick = ()=>mask.classList.remove('open');
   mask.onclick = (e)=>{ if(e.target===mask) mask.classList.remove('open'); };
-  mask.querySelector('#dOrder').onclick = ()=>{ APP.order.custMa = ma; go('order'); };
+  mask.querySelector('#dOrder').onclick = ()=>{ newDraft(ma); };
   mask.querySelector('#dEdit').onclick = ()=>{ mask.classList.remove('open'); openCustomerForm(c, ma); };
   mask.querySelector('#dHist').onclick = ()=>{ mask.classList.remove('open'); APP.q = ma; APP.seg.orders='Tất cả'; go('orders'); };
 }

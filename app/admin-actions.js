@@ -23,6 +23,38 @@ function confirmDialog(title, desc, onYes) {
   m.querySelector('[data-yes]').onclick = () => { close(); onYes && onYes(); };
 }
 
+/* ---------------- Hộp nhập lý do ---------------- */
+function promptDialog(opt, onYes) {
+  const { title, desc, placeholder = 'Nhập lý do…', yes = 'Xác nhận', danger = false, icon = 'edit' } = opt;
+  const m = document.createElement('div');
+  m.className = 'modal-mask';
+  m.innerHTML = `<div class="modal" style="text-align:left">
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:6px">
+      <div class="modal-ic" style="margin:0;${danger?'':'background:var(--primary-50);color:var(--primary)'}">${ICON[icon]}</div>
+      <div class="modal-t" style="text-align:left">${title}</div>
+    </div>
+    <div class="modal-d" style="text-align:left">${desc || ''}</div>
+    <div class="fld" style="margin-top:14px"><label>Lý do <span class="req">*</span></label>
+      <textarea id="pmReason" rows="3" placeholder="${placeholder}" style="font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface);outline:none;resize:vertical"></textarea></div>
+    <div class="modal-acts">
+      <button class="btn btn-ghost" data-no>Hủy</button>
+      <button class="btn ${danger?'':'btn-primary'}" data-yes ${danger?'style="background:var(--danger);color:#fff"':''}>${yes}</button>
+    </div></div>`;
+  document.body.appendChild(m);
+  requestAnimationFrame(() => m.classList.add('open'));
+  const ta = m.querySelector('#pmReason');
+  ta.focus();
+  ta.onfocus = () => ta.style.borderColor = 'var(--primary)';
+  const close = () => { m.classList.remove('open'); setTimeout(() => m.remove(), 200); };
+  m.querySelector('[data-no]').onclick = close;
+  m.onclick = e => { if (e.target === m) close(); };
+  m.querySelector('[data-yes]').onclick = () => {
+    const r = ta.value.trim();
+    if (!r) { ta.style.borderColor = 'var(--danger)'; ta.style.boxShadow = '0 0 0 3px var(--danger-50)'; ta.focus(); return; }
+    close(); onYes && onYes(r);
+  };
+}
+
 /* ---------------- Form Thêm / Sửa khách hàng ---------------- */
 function nextCustomerCode(loai, nhom) {
   const pre = { 'Nhà thuốc': 'NT', 'Phòng khám': 'PK', 'Bệnh viện': 'BV' }[nhom] || 'KH';
