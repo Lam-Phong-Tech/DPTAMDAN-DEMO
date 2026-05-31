@@ -1,0 +1,121 @@
+/* =========================================================================
+   THEME — Hệ thống Quản trị Bán hàng Tâm Đan
+   Tông y dược tin cậy: xanh dương chủ đạo, xanh lá tích cực, đỏ cảnh báo.
+   ========================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Palette mặc định — "Xanh y dược" */
+  --bg:        oklch(0.975 0.006 235);
+  --surface:   oklch(1 0 0);
+  --surface-2: oklch(0.985 0.005 235);
+  --ink:       oklch(0.26 0.02 240);
+  --ink-soft:  oklch(0.46 0.02 240);
+  --ink-mute:  oklch(0.62 0.015 240);
+  --line:      oklch(0.92 0.008 235);
+  --line-soft: oklch(0.955 0.006 235);
+
+  --primary:      oklch(0.52 0.11 235);
+  --primary-700:  oklch(0.44 0.10 238);
+  --primary-600:  oklch(0.49 0.11 236);
+  --primary-50:   oklch(0.96 0.022 235);
+  --primary-100:  oklch(0.93 0.038 235);
+
+  --accent:     oklch(0.60 0.12 158);  /* xanh lá tích cực */
+  --accent-50:  oklch(0.96 0.03 158);
+  --accent-100: oklch(0.92 0.05 158);
+
+  --warn:    oklch(0.74 0.13 72);
+  --warn-50: oklch(0.96 0.04 75);
+  --danger:    oklch(0.56 0.18 26);
+  --danger-50: oklch(0.96 0.035 26);
+
+  --sidebar:     oklch(0.27 0.035 245);
+  --sidebar-2:   oklch(0.31 0.04 245);
+  --sidebar-ink: oklch(0.86 0.015 235);
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 2px oklch(0.4 0.03 240 / 0.06), 0 1px 1px oklch(0.4 0.03 240 / 0.04);
+  --shadow:    0 4px 14px oklch(0.4 0.03 240 / 0.08), 0 1px 3px oklch(0.4 0.03 240 / 0.05);
+  --shadow-lg: 0 18px 48px oklch(0.35 0.04 245 / 0.16);
+
+  --font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Biến thể phong cách qua Tweaks: data-theme trên :root */
+:root[data-theme="green"] {
+  --primary:     oklch(0.52 0.10 162);
+  --primary-700: oklch(0.43 0.09 164);
+  --primary-600: oklch(0.48 0.10 163);
+  --primary-50:  oklch(0.96 0.024 162);
+  --primary-100: oklch(0.93 0.04 162);
+  --accent:      oklch(0.58 0.12 235);
+  --accent-50:   oklch(0.96 0.03 235);
+  --accent-100:  oklch(0.92 0.05 235);
+  --sidebar:     oklch(0.28 0.035 168);
+  --sidebar-2:   oklch(0.32 0.04 168);
+}
+:root[data-theme="slate"] {
+  --primary:     oklch(0.44 0.04 245);
+  --primary-700: oklch(0.36 0.035 248);
+  --primary-600: oklch(0.41 0.04 246);
+  --primary-50:  oklch(0.96 0.008 245);
+  --primary-100: oklch(0.92 0.012 245);
+  --accent:      oklch(0.58 0.10 200);
+  --accent-50:   oklch(0.96 0.025 200);
+  --accent-100:  oklch(0.92 0.04 200);
+  --sidebar:     oklch(0.24 0.012 248);
+  --sidebar-2:   oklch(0.29 0.015 248);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button { font-family: inherit; cursor: pointer; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.mono { font-family: var(--mono); }
+
+/* ---- Tiện ích chung ---- */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  line-height: 1.6; white-space: nowrap;
+}
+.badge-blue   { background: var(--primary-50); color: var(--primary-700); }
+.badge-green  { background: var(--accent-50); color: oklch(0.42 0.11 158); }
+.badge-warn   { background: var(--warn-50); color: oklch(0.46 0.12 60); }
+.badge-danger { background: var(--danger-50); color: var(--danger); }
+.badge-gray   { background: var(--surface-2); color: var(--ink-soft); border: 1px solid var(--line); }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 9px 16px; border-radius: var(--radius-sm); border: 1px solid transparent;
+  font-size: 13.5px; font-weight: 600; transition: all .15s ease; white-space: nowrap;
+}
+.btn-primary { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-ghost { background: var(--surface); color: var(--ink-soft); border-color: var(--line); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--ink); }
+.btn-sm { padding: 6px 11px; font-size: 12.5px; }
+.btn-accent { background: var(--accent); color: #fff; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: oklch(0.85 0.01 240); border-radius: 6px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: oklch(0.78 0.015 240); }

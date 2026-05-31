@@ -1,0 +1,142 @@
+/* =========================================================================
+   WEB ADMIN — Màn hình xử lý đơn (bộ máy tính) + form danh mục
+   ========================================================================= */
+
+/* icon sizing cho màn đơn */
+.warn-banner svg { width: 19px; height: 19px; }
+.gift-box .gh svg, .explain .eh svg { width: 16px; height: 16px; }
+.prog-card .pc-ic svg { width: 19px; height: 19px; }
+.rm-btn svg { width: 14px; height: 14px; }
+.add-line > svg { width: 17px; height: 17px; color: var(--ink-mute); }
+.x-btn svg { width: 16px; height: 16px; }
+
+/* layout: lưới đơn bên trái, panel diễn giải bên phải */
+.order-layout { display: grid; grid-template-columns: 1fr 360px; gap: 18px; align-items: start; }
+.order-layout.layout-bottom { grid-template-columns: 1fr; }
+
+@media (max-width: 1180px) {
+  .order-layout { grid-template-columns: 1fr; }
+  .order-layout .explain { position: static; margin-top: 16px; }
+  .order-layout .explain-grid { columns: 2; column-gap: 22px; }
+}
+@media (max-width: 720px) {
+  .ord-head .row { grid-template-columns: 1fr 1fr; }
+  .order-layout .explain-grid { columns: 1; }
+}
+
+/* khối thông tin chung */
+.ord-head { padding: 18px 20px; margin-bottom: 16px; }
+.ord-head .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.fld { display: flex; flex-direction: column; gap: 5px; }
+.fld label { font-size: 11.5px; font-weight: 600; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.03em; }
+.fld select, .fld input {
+  font-family: inherit; font-size: 13.5px; color: var(--ink); padding: 9px 11px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); outline: none; transition: border .14s;
+}
+.fld select:focus, .fld input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
+.fld .static { padding: 9px 11px; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 8px; font-size: 13px; min-height: 39px; }
+.fld .static.empty { color: var(--ink-mute); }
+
+.cust-card { display: flex; align-items: center; gap: 13px; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface-2); margin-top: 4px; }
+.cust-card .ava { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 15px; flex-shrink: 0; }
+.cust-card .nm { font-weight: 700; font-size: 14.5px; }
+.cust-card .meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+.cust-card .gdp { margin-left: auto; text-align: right; }
+
+/* lưới sản phẩm */
+.ord-grid-wrap { overflow: visible; }
+table.ord-grid { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ord-grid thead th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-mute); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.ord-grid th.r, .ord-grid td.r { text-align: right; }
+.ord-grid th.c, .ord-grid td.c { text-align: center; }
+.ord-grid tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+.ord-grid tbody tr.warn-row { background: var(--warn-50); }
+.ord-grid .pname { font-weight: 600; }
+.ord-grid .pmeta { font-size: 11px; color: var(--ink-mute); display: flex; gap: 6px; align-items: center; margin-top: 2px; }
+.ord-grid input.qty { width: 64px; text-align: center; font-family: var(--mono); font-weight: 600; padding: 6px; border: 1px solid var(--line); border-radius: 7px; font-size: 13px; outline: none; }
+.ord-grid input.qty:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
+.price-tag { display: inline-flex; flex-direction: column; align-items: flex-end; }
+.price-tag .pv { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.price-tag .pk { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 1px; }
+.pk-thung { color: oklch(0.42 0.11 158); }
+.pk-hop { color: var(--ink-mute); }
+.pk-thau { color: var(--primary-700); }
+.pk-mot-gia { color: var(--ink-mute); }
+.gift-cell { color: oklch(0.42 0.11 158); font-weight: 700; font-family: var(--mono); }
+.ord-grid .line-tot { font-family: var(--mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+.rm-btn { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-mute); display: grid; place-items: center; }
+.rm-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-50); }
+.toggle-price { font-size: 10.5px; color: var(--primary); font-weight: 700; cursor: pointer; border: none; background: none; padding: 1px 0; text-decoration: underline; }
+
+.add-line { display: flex; gap: 9px; padding: 12px; border-top: 1px dashed var(--line); align-items: center; }
+.add-line select { flex: 1; font-family: inherit; font-size: 13px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); outline: none; }
+
+/* tổng kết */
+.ord-summary { padding: 16px 20px; margin-top: 16px; display: grid; grid-template-columns: 1fr auto; gap: 6px 30px; }
+.sum-line { display: flex; justify-content: space-between; align-items: baseline; font-size: 13.5px; padding: 5px 0; }
+.sum-line .k { color: var(--ink-soft); }
+.sum-line .v { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.sum-line.total { border-top: 2px solid var(--line); margin-top: 6px; padding-top: 12px; }
+.sum-line.total .k { font-weight: 700; font-size: 15px; color: var(--ink); }
+.sum-line.total .v { font-weight: 800; font-size: 20px; color: var(--primary-700); }
+
+/* ---------- Panel diễn giải ---------- */
+.explain { position: sticky; top: 78px; }
+.explain .eh { padding: 15px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 9px; }
+.explain .eh .et { font-size: 14px; font-weight: 700; }
+.explain .eh .es { font-size: 11px; color: var(--ink-mute); }
+.explain-body { padding: 8px 18px 16px; max-height: 60vh; overflow-y: auto; }
+.layout-bottom .explain { position: static; margin-top: 16px; }
+.layout-bottom .explain-body { max-height: none; }
+.layout-bottom .explain-grid { columns: 2; column-gap: 22px; }
+
+.gift-box { background: var(--accent-50); border: 1px solid var(--accent-100); border-radius: 10px; padding: 12px 14px; margin: 12px 0; }
+.gift-box .gh { font-size: 12px; font-weight: 700; color: oklch(0.42 0.11 158); text-transform: uppercase; letter-spacing: 0.03em; display: flex; align-items: center; gap: 7px; }
+.gift-item { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; }
+.gift-item .gq { font-family: var(--mono); font-weight: 700; background: #fff; border: 1px solid var(--accent-100); border-radius: 6px; padding: 1px 8px; font-size: 12px; }
+
+.dien-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); break-inside: avoid; }
+.dien-item:last-child { border-bottom: none; }
+.dien-item .di-num { width: 20px; height: 20px; border-radius: 6px; background: var(--primary-50); color: var(--primary-700); font-size: 10.5px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; font-family: var(--mono); }
+.dien-item b { color: var(--ink); font-weight: 700; }
+
+.warn-banner { display: flex; gap: 11px; padding: 13px 15px; border-radius: 10px; margin-bottom: 14px; align-items: flex-start; }
+.warn-banner.danger { background: var(--danger-50); border: 1px solid oklch(0.85 0.06 26); }
+.warn-banner.warn { background: var(--warn-50); border: 1px solid oklch(0.86 0.07 75); }
+.warn-banner .wi { flex-shrink: 0; }
+.warn-banner .wt { font-size: 13px; font-weight: 600; }
+.warn-banner.danger .wt { color: var(--danger); }
+.warn-banner.warn .wt { color: oklch(0.46 0.12 60); }
+
+/* progress bars cho du lịch / hợp đồng năm */
+.prog { margin: 12px 0; }
+.prog .ph { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+.prog .ph .pk { font-weight: 600; color: var(--ink-soft); }
+.prog .ph .pv { font-family: var(--mono); font-weight: 700; }
+.prog .track { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; border: 1px solid var(--line-soft); }
+.prog .fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width .6s; }
+
+/* ---------- Catalog forms / detail ---------- */
+.prog-card { padding: 16px 18px; display: flex; flex-direction: column; gap: 0; }
+.prog-card .pc-top { display: flex; align-items: flex-start; gap: 12px; }
+.prog-card .pc-ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
+.prog-card .pc-nm { font-weight: 700; font-size: 14.5px; }
+.prog-card .pc-ky { font-size: 12px; color: var(--ink-mute); margin-top: 1px; }
+.tier { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--surface-2); border-radius: 8px; margin-top: 7px; font-size: 13px; }
+.tier .tv { font-family: var(--mono); font-weight: 700; }
+.prog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 26px; }
+.dl { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
+.dl .k { color: var(--ink-mute); }
+.dl .v { font-weight: 600; text-align: right; }
+
+/* modal/drawer */
+.drawer-mask { position: fixed; inset: 0; background: oklch(0.2 0.03 245 / 0.42); z-index: 100; display: flex; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity .22s; }
+.drawer-mask.open { opacity: 1; pointer-events: auto; }
+.drawer { width: 520px; max-width: 92vw; background: var(--surface); height: 100%; box-shadow: var(--shadow-lg); transform: translateX(30px); transition: transform .26s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+.drawer-mask.open .drawer { transform: none; }
+.drawer-head { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+.drawer-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+.x-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--ink-soft); margin-left: auto; }
+.x-btn:hover { background: var(--surface-2); }
