@@ -74,7 +74,12 @@ function renderOrder(c) {
   });
   c.querySelector('#confirmOrder').onclick = ()=>{
     if(kq.canhBao.some(w=>w.chan)){ toast('Không thể xác nhận: khách hết hạn giấy phép GDP','danger'); return; }
-    toast('Đã xác nhận đơn 06-05-2026 · chuyển trạng thái “Đã duyệt”','ok');
+    if(!o.lines.length){ toast('Đơn chưa có sản phẩm','danger'); return; }
+    const maxN = Math.max(0, ...TD.orders.map(x=>parseInt(x.ma)||0));
+    const ma = `${String(maxN+1).padStart(2,'0')}-05-2026`;
+    TD.orders.unshift({ ma, khach:o.custMa, tdv:o.tdvMa, ngay:'2026-05-31', kenh:kh.nhomKhach, trangThai:'Đã duyệt', tong:kq.tongTien });
+    toast(`Đã xác nhận đơn ${ma} · chuyển trạng thái “Đã duyệt”`,'ok');
+    go('orders');
   };
   c.querySelector('#printOrder').onclick = ()=> openPrint(kh, tdv, kq);
 }

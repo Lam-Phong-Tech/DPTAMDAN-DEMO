@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Hệ thống Quản trị Bán hàng Tâm Đan · Tổng quan</title>
+<link rel="stylesheet" href="app/theme.css"/>
+<style>
+  body { background:
+    radial-gradient(1100px 520px at 18% -5%, oklch(0.95 0.03 235), transparent),
+    radial-gradient(900px 480px at 92% 8%, oklch(0.95 0.025 158), transparent),
+    var(--bg); }
+  .ov { max-width: 1280px; margin: 0 auto; padding: 30px 30px 70px; }
+
+  .ov-top { display: flex; align-items: center; gap: 14px; margin-bottom: 38px; }
+  .ov-top img { height: 30px; }
+  .ov-top .tag { margin-left: auto; display: flex; gap: 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+  .hero { max-width: 820px; margin-bottom: 34px; }
+  .hero .eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+  .hero h1 { font-size: 40px; line-height: 1.1; font-weight: 800; letter-spacing: -0.025em; margin: 12px 0 14px; text-wrap: balance; }
+  .hero p { font-size: 16.5px; color: var(--ink-soft); line-height: 1.6; margin: 0; max-width: 720px; }
+  .hero .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+  .chip { padding: 7px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; box-shadow: var(--shadow-sm); }
+  .chip b { color: var(--primary-700); }
+
+  /* previews */
+  .previews { display: flex; gap: 44px; align-items: flex-start; flex-wrap: wrap; }
+  .pv-col .pv-label { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
+  .pv-col .pv-label .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; color: #fff; flex-shrink: 0; }
+  .pv-col .pv-label .nm { font-size: 17px; font-weight: 700; }
+  .pv-col .pv-label .ds { font-size: 12.5px; color: var(--ink-mute); }
+  .pv-col .pv-label a { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--primary); text-decoration: none; padding: 8px 14px; border: 1px solid var(--primary-100); border-radius: 9px; background: var(--primary-50); white-space: nowrap; }
+  .pv-col .pv-label a:hover { background: var(--primary-100); }
+
+  .browser { width: 824px; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--line); background: #fff; }
+  .bw-bar { height: 42px; background: var(--surface-2); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; padding: 0 15px; }
+  .bw-bar .lights { display: flex; gap: 7px; }
+  .bw-bar .lights span { width: 12px; height: 12px; border-radius: 50%; }
+  .bw-bar .url { flex: 1; margin-left: 8px; height: 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; color: var(--ink-mute); font-family: var(--mono); }
+  .bw-view { width: 824px; height: 521px; overflow: hidden; position: relative; }
+  .bw-view iframe { width: 1440px; height: 911px; border: 0; transform: scale(0.5722); transform-origin: top left; }
+
+  .phone-col { flex-shrink: 0; }
+  .phone-wrap { width: 312px; height: 676px; overflow: hidden; position: relative; }
+  .phone-wrap iframe { width: 446px; height: 966px; border: 0; transform: scale(0.7); transform-origin: top left; }
+
+  /* analysis */
+  .analysis { margin-top: 56px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; }
+  .an-h { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-mute); margin-bottom: 18px; }
+  .pain { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .pain:last-child { border-bottom: none; }
+  .pain .px { width: 30px; height: 30px; border-radius: 8px; background: var(--danger-50); color: var(--danger); display: grid; place-items: center; flex-shrink: 0; font-size: 14px; }
+  .pain .arrow { color: var(--ink-mute); align-self: center; }
+  .pain .sol { flex: 1; }
+  .pain .sol .a { font-size: 13.5px; color: var(--ink-mute); text-decoration: line-through; text-decoration-color: oklch(0.8 0.05 26); }
+  .pain .sol .b { font-size: 14px; font-weight: 600; margin-top: 2px; }
+  .pain .sol .b b { color: var(--primary-700); }
+
+  .mods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mod { padding: 14px 15px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+  .mod .mn { font-weight: 700; font-size: 13.5px; }
+  .mod .md { font-size: 12px; color: var(--ink-mute); margin-top: 3px; line-height: 1.45; }
+  .mod .fr { font-family: var(--mono); font-size: 10.5px; color: var(--primary); font-weight: 600; margin-top: 6px; }
+
+  .foot { margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-mute); display: flex; gap: 16px; flex-wrap: wrap; }
+  .foot b { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="ov">
+  <div class="ov-top">
+    <img src="assets/logo-tamdan.png" alt="Tâm Đan"/>
+    <div class="tag">
+      <span class="pill"><span class="dot"></span>Bản demo tương tác</span>
+      <span class="pill">URD v1.0 · 30/05/2026</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Hệ thống Quản trị Bán hàng &amp; Xử lý Đơn hàng nội bộ</div>
+    <h1>Số hóa quy trình bán hàng dược phẩm — bộ máy tính giá &amp; khuyến mãi tự động</h1>
+    <p>Thay thế file Excel thủ công bằng phần mềm tự tra giá hộp/giá thùng, tính hàng tặng, áp chương trình khuyến mãi và cảnh báo hạn giấy phép — đồng bộ trên hai nền tảng để Ban lãnh đạo lựa chọn.</p>
+    <div class="chips">
+      <div class="chip"><b>Tự động</b> giá hộp ↔ giá thùng</div>
+      <div class="chip"><b>5+1 · 20+5</b> hàng tặng</div>
+      <div class="chip"><b>Quý · Tháng · Du lịch</b> khuyến mãi</div>
+      <div class="chip"><b>Cảnh báo</b> hạn GDP &amp; cận date</div>
+      <div class="chip"><b>Diễn giải</b> từng bước áp dụng</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="previews" id="previews">
+      <div class="pv-col">
+        <div class="pv-label">
+          <div class="ic" style="background:var(--primary)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div><div class="nm">Web Admin</div><div class="ds">Xử lý · duyệt · in đơn · quản lý danh mục · báo cáo</div></div>
+          <a href="Web Admin.html" target="_blank">Mở toàn màn hình →</a>
+        </div>
+        <div class="browser">
+          <div class="bw-bar"><div class="lights"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div class="url">admin.tamdan.vn / xu-ly-don-hang</div></div>
+          <div class="bw-view"><iframe src="Web Admin.html#order" title="Web Admin" scrolling="no"></iframe></div>
+        </div>
+      </div>
+
+      <div class="pv-col phone-col">
+        <div class="pv-label">
+          <div class="ic" style="background:var(--accent)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+          </div>
+          <div><div class="nm">Mobile App — TDV</div><div class="ds">Tạo &amp; gửi đơn tại điểm bán</div></div>
+          <a href="Mobile App.html" target="_blank">Mở →</a>
+        </div>
+        <div class="phone-wrap"><iframe src="Mobile App.html" title="Mobile App" scrolling="no"></iframe></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analysis">
+    <div>
+      <div class="an-h">Từ "nỗi đau" Excel → Hệ thống tự động</div>
+      <div class="pain"><div class="px">P1</div>
+        <div class="sol"><div class="a">Tính khuyến mãi/chiết khấu bằng tay, dễ sai &amp; sót quà</div>
+          <div class="b">Bộ máy <b>tự áp chương trình</b> &amp; tính hàng tặng theo bội số</div></div></div>
+      <div class="pain"><div class="px">P2</div>
+        <div class="sol"><div class="a">Sửa công thức tay để đổi giá hộp ↔ giá thùng</div>
+          <div class="b">Tự nhận diện quy cách thùng, <b>tự chọn đúng đơn giá</b></div></div></div>
+      <div class="pain"><div class="px">P3</div>
+        <div class="sol"><div class="a">Cộng dồn doanh số HĐ năm / du lịch thủ công</div>
+          <div class="b"><b>Tự tích lũy</b> &amp; hiển thị tiến độ đạt mốc</div></div></div>
+      <div class="pain"><div class="px">P5</div>
+        <div class="sol"><div class="a">Không cảnh báo hạn giấy phép &amp; hạn dùng</div>
+          <div class="b"><b>Chặn lên đơn</b> khi hết hạn GDP, cảnh báo cận date</div></div></div>
+      <div class="pain"><div class="px">P8</div>
+        <div class="sol"><div class="a">TDV khó thao tác Excel trên điện thoại</div>
+          <div class="b"><b>Mobile App</b> tạo đơn 3 chạm tại điểm bán</div></div></div>
+    </div>
+    <div>
+      <div class="an-h">Phân hệ trong bản demo</div>
+      <div class="mods">
+        <div class="mod"><div class="mn">Xử lý đơn hàng</div><div class="md">Bộ máy tính giá &amp; khuyến mãi tự động, có diễn giải</div><div class="fr">FR-CAL · FR-ORD</div></div>
+        <div class="mod"><div class="mn">Khách hàng</div><div class="md">Hồ sơ, phân loại, cảnh báo hạn giấy phép GDP</div><div class="fr">FR-CUS</div></div>
+        <div class="mod"><div class="mn">Sản phẩm &amp; Báo giá</div><div class="md">BBG 2026: giá hộp/thùng, quy cách, nhóm hàng</div><div class="fr">FR-PRD</div></div>
+        <div class="mod"><div class="mn">Chương trình KM</div><div class="md">Quý · Tháng · Du lịch · HĐ năm · chiết khấu</div><div class="fr">FR-PRG</div></div>
+        <div class="mod"><div class="mn">Dashboard</div><div class="md">Doanh số, đơn chờ xử lý, cảnh báo cần xử lý</div><div class="fr">Tổng quan</div></div>
+        <div class="mod"><div class="mn">Báo cáo</div><div class="md">Kết xuất chọn cột ra Excel, báo cáo cuối ngày</div><div class="fr">FR-REP</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span><b>Tùy biến:</b> mở Web Admin và bật <b>Tweaks</b> để đổi phong cách màu &amp; bố cục màn đơn.</span>
+    <span><b>Dữ liệu mẫu</b> theo đúng ví dụ trong tài liệu (42 hộp/thùng · 20+5 · quý 8tr · du lịch 50tr/vé).</span>
+  </div>
+</div>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#2563b8"/>
+    <rect x="22" y="30" width="40" height="30" rx="3" fill="#fff"/>
+    <rect x="66" y="34" width="13" height="26" rx="3" fill="#fff"/>
+    <rect x="26" y="36" width="32" height="4" rx="2" fill="#2563b8"/>
+    <rect x="26" y="44" width="24" height="3" rx="1.5" fill="#9bc0ec"/>
+    <rect x="26" y="51" width="28" height="3" rx="1.5" fill="#9bc0ec"/>
+  </svg>
+</template>
+</body>
+</html>

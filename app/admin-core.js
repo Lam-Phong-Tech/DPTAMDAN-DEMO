@@ -21,6 +21,9 @@ const ICON = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   trend: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m3 17 6-6 4 4 8-8M21 7h-4v4"/></svg>',
   spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"/></svg>',
+  upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>',
 };
 
 const AV_COLORS = ['oklch(0.55 0.13 250)','oklch(0.55 0.13 160)','oklch(0.58 0.14 30)','oklch(0.52 0.13 300)','oklch(0.55 0.13 200)'];
@@ -42,12 +45,22 @@ const APP = {
     ],
   },
   tweaks: { theme: 'blue', layout: 'side' },
+  q: '',                                   // từ khoá tìm kiếm toàn cục
+  seg: { products: 'Tất cả', orders: 'Tất cả', customers: 'Tất cả' }, // tab lọc theo màn
+  notiOpen: false,
 };
+
+/* tiện ích lọc */
+function matchQ(q, ...fields) {
+  if (!q) return true;
+  const s = q.toLowerCase();
+  return fields.some(f => (f || '').toString().toLowerCase().includes(s));
+}
 
 const NAV = [
   { g: 'Tổng quan' },
   { id: 'dash', t: 'Dashboard', ic: 'dash' },
-  { id: 'order', t: 'Xử lý đơn hàng', ic: 'calc', badge: 'star' },
+  { id: 'order', t: 'Xử lý đơn hàng', ic: 'calc' },
   { id: 'orders', t: 'Danh sách đơn', ic: 'order', count: () => TD.orders.length },
   { g: 'Danh mục' },
   { id: 'customers', t: 'Khách hàng', ic: 'cust', count: () => TD.customers.length },
@@ -73,6 +86,14 @@ function go(screen) { APP.screen = screen; render(); window.scrollTo(0,0); }
 (function(){ const h = (location.hash||'').replace('#',''); if (h && TITLES[h]) APP.screen = h; })();
 
 /* ---------------- Render shell ---------------- */
+function renderContent() {
+  const c = document.getElementById('content');
+  if (!c) return;
+  ({ dash: renderDash, order: renderOrder, orders: renderOrders,
+     customers: renderCustomers, products: renderProducts,
+     promos: renderPromos, reports: renderReports }[APP.screen] || renderDash)(c);
+}
+
 function render() {
   document.documentElement.setAttribute('data-theme', APP.tweaks.theme);
   const root = document.getElementById('app');
@@ -90,16 +111,25 @@ function render() {
     <div class="main">
       <header class="topbar">
         <div><h1>${TITLES[APP.screen][0]}</h1></div>
-        <div class="search">${ICON.search}<input placeholder="Tìm khách, sản phẩm, mã đơn..."/></div>
-        <button class="ic-btn">${ICON.bell}<span class="dot"></span></button>
+        <div class="search">${ICON.search}<input id="globalSearch" placeholder="Tìm khách, sản phẩm, mã đơn..." value="${APP.q.replace(/"/g,'&quot;')}"/></div>
+        <button class="ic-btn" id="bellBtn">${ICON.bell}<span class="dot"></span></button>
+        <div id="notiWrap"></div>
       </header>
       <div id="content"></div>
     </div>`;
   root.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => go(b.dataset.nav));
-  const c = document.getElementById('content');
-  ({ dash: renderDash, order: renderOrder, orders: renderOrders,
-     customers: renderCustomers, products: renderProducts,
-     promos: renderPromos, reports: renderReports }[APP.screen] || renderDash)(c);
+
+  // tìm kiếm toàn cục — chỉ vẽ lại nội dung để không mất focus
+  const si = root.querySelector('#globalSearch');
+  si.oninput = () => {
+    APP.q = si.value;
+    const onList = ['products','orders','customers','reports'].includes(APP.screen);
+    if (!onList) go('products'); else renderContent();
+  };
+  // chuông thông báo
+  root.querySelector('#bellBtn').onclick = (e) => { e.stopPropagation(); toggleNoti(); };
+
+  renderContent();
 }
 
 function navItem(n) {
@@ -109,6 +139,17 @@ function navItem(n) {
   if (n.badge === 'star') right = `<span class="count" style="background:var(--accent)">★</span>`;
   else if (n.count) right = `<span class="count">${n.count()}</span>`;
   return `<button class="sb-item${active}" data-nav="${n.id}">${ICON[n.ic]}<span>${n.t}</span>${right}</button>`;
+}
+
+/* ---- helpers lọc & trạng thái rỗng ---- */
+function segHtml(items, active) {
+  return `<div class="seg">${items.map(s => `<button class="${s === active ? 'on' : ''}" data-seg="${s}">${s}</button>`).join('')}</div>`;
+}
+function bindSeg(c, screen) {
+  c.querySelectorAll('[data-seg]').forEach(b => b.onclick = () => { APP.seg[screen] = b.dataset.seg; renderContent(); });
+}
+function emptyHtml(msg) {
+  return `<div class="empty-state"><div class="es-ic">${ICON.search}</div><div class="es-t">${msg}</div></div>`;
 }
 
 /* ---------------- Dashboard ---------------- */
@@ -195,19 +236,24 @@ function bindOrdersTable(c) {
 }
 
 function renderOrders(c) {
+  const list = TD.orders.filter(o => {
+    const kh = TD.findCustomer(o.khach);
+    return (APP.seg.orders === 'Tất cả' || o.trangThai === APP.seg.orders)
+      && matchQ(APP.q, o.ma, o.khach, kh && kh.ten, o.kenh);
+  });
   c.innerHTML = `<div class="screen">
     <div class="screen-head">
-      <div><div class="t">Danh sách đơn hàng</div><div class="d">Tháng 05/2026 · ${TD.orders.length} đơn</div></div>
-      <div class="actions"><button class="btn btn-ghost btn-sm">${ICON.export} Xuất Excel</button>
+      <div><div class="t">Danh sách đơn hàng</div><div class="d">Tháng 05/2026 · ${list.length}/${TD.orders.length} đơn</div></div>
+      <div class="actions"><button class="btn btn-ghost btn-sm" id="expOrders">${ICON.export} Xuất Excel</button>
       <button class="btn btn-primary btn-sm" id="newOrder">${ICON.plus} Tạo đơn mới</button></div>
     </div>
     <div class="toolbar">
-      <div class="seg"><button class="on">Tất cả</button><button>Chờ xử lý</button><button>Đã duyệt</button><button>Đã in</button></div>
-      <div class="filter-pill">${ICON.cust} Tất cả TDV</div>
-      <div class="filter-pill">${ICON.clock} Tháng 05/2026</div>
+      ${segHtml(['Tất cả','Chờ xử lý','Đã duyệt','Đã in'], APP.seg.orders)}
     </div>
-    ${ordersTable(TD.orders)}
+    ${list.length ? ordersTable(list) : emptyHtml('Không có đơn phù hợp bộ lọc')}
   </div>`;
   c.querySelector('#newOrder').onclick = () => go('order');
+  c.querySelector('#expOrders').onclick = () => exportOrders(list);
+  bindSeg(c, 'orders');
   bindOrdersTable(c);
 }
